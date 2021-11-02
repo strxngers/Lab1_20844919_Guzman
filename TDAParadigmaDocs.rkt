@@ -2,6 +2,7 @@
 
 ; Para la creación de ParadigmaDocs se requiere usar TDA Fecha
 (require "TDAFecha.rkt")
+(require "TDAUser.rkt")
 
 ; TDAParadigmaDocs
 
@@ -11,8 +12,8 @@
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: string.
 ; Recorrido: string.
-(define encrypyFn (lambda (s) (list->string (reverse (string->list s)))))
-(define decryptFn (lambda (s) (list->string (reverse (string->list s)))))
+(define encrypyFunction (lambda (s) (list->string (reverse (string->list s)))))
+(define decryptFunction (lambda (s) (list->string (reverse (string->list s)))))
 
 ; CONSTRUCTOR
 
@@ -21,8 +22,8 @@
 ; Dominio: string y entero
 ; Recorrido: lista que contiene el nombre de la plataforma, la fecha de creación, el texto entregado
 ; por encryptFn y el texto entregado por decryptFn
-(define(createParadigmaDocs nombre fecha encryptFn decryptFn)
-  (list nombre fecha encryptFn decryptFn))
+(define(createParadigmaDocs nombre fecha encryptFunction decryptFunction)
+  (list nombre fecha encryptFunction decryptFunction (list ) (list )))
 
 ; PERTENENCIA
 
@@ -31,9 +32,12 @@
 ; Dominio: documento ParadigmaDocs  
 ; Recorrido: booleano
 (define(isParadigmaDocs? documento)
-  (if (and (= (length documento)4)
+  (if (and (= (length documento))
            (string? (car documento))
            (esFecha (cadr documento))
+           (list? (car(cddddr documento)))
+           (list? (car (cdr (cdr (cdr (cdr documento))))))
+           (list? (car (cdr (cdr (cdr (cdr (cdr documento)))))))
            )
       #t
       #f))
@@ -59,23 +63,42 @@
       (cadr paradigmaDocs)
       null))
 
-; Desripción: Retorna la función encryptFn o texto.
+; Desripción: Retorna la función encryptFunction o texto.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: Entero.
 ; Recorrido: función o texto.
-(define(getEncryptFn paradigmaDocs)
+(define(getEncryptFunction paradigmaDocs)
   (if (isParadigmaDocs? paradigmaDocs)
       (caddr paradigmaDocs)
       null))
 
-; Desripción: Retorna la función encryptFn o texto.
+; Desripción: Retorna la función encryptFunction o texto.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: Entero.
 ; Recorrido: función o texto.
-(define(getDecryptFn paradigmaDocs)
+(define(getDecryptFunction paradigmaDocs)
   (if (isParadigmaDocs? paradigmaDocs)
       (cadddr paradigmaDocs)
       null))
+
+; Desripción: Retorna la lista de usuarios registrados.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: Usuarios (string).
+; Recorrido: Lista de strings o vacía.
+(define(getListaUsers paradigmaDocs)
+  (if (isParadigmaDocs? paradigmaDocs)
+      (car(cddddr paradigmaDocs))
+      null))
+
+; Desripción: Retorna la lista de usuarios activos
+; Tipo de recursión: no utiliza recursión.
+; Dominio: usuarios (string).
+; Recorrido: lista de strings o vacía.
+(define(getListaUserActivo paradigmaDocs)
+  (if (isParadigmaDocs? paradigmaDocs)
+      (car (cdr (cdr (cdr (cdr (cdr paradigmaDocs))))))
+      null))
+
 
 ; MODIFICADORES
 
@@ -84,12 +107,54 @@
 ; Dominio: string.
 ; Recorrido: string.
 (define(setNombre paradigmaDocs nombre)
-  (list nombre (getFecha paradigmaDocs) (getEncryptFn paradigmaDocs)(getDecryptFn paradigmaDocs)))
+  (list nombre (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs) (getListaUserActivo paradigmaDocs)))
 
 ; Desripción: cambia la fecha.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: entero.
 ; Recorrido: entero.
 (define(setFecha paradigmaDocs fecha)
-  (list (getNombre paradigmaDocs) fecha (getEncryptFn paradigmaDocs)(getDecryptFn paradigmaDocs)))
+  (list (getNombre paradigmaDocs) fecha (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs))(getListaUsers paradigmaDocs) (getListaUserActivo paradigmaDocs))
 
+; Desripción: cambia la listaUsers
+; Tipo de recursión: no utiliza recursión como tal, una función que se utiliza dentro de setListaUsers
+;                    utiliza recursión.
+; Dominio: usuario (string).
+; Recorrido: lista de strings.
+(define(setListaUsers paradigmaDocs usuario)
+  (list (getNombre paradigmaDocs) (getFecha paradigmaDocs)(getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs) (guardarUser (getListaUsers paradigmaDocs) usuario) (getListaUserActivo paradigmaDocs)))
+
+; Desripción: cambia la listaUserActivo, va a servir para la función login.
+; Tipo de recursión: no utiliza recursión como tal, una función que se utiliza dentro de setListaUsers
+;                    utiliza recursión.
+; Dominio: usuario (string).
+; Recorrido: lista de strings.
+(define(setListaUsersActivo paradigmaDocs usuario)
+  (list (getNombre paradigmaDocs)(getFecha paradigmaDocs)(getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs) (guardarUser (getListaUserActivo paradigmaDocs) usuario)))
+
+
+
+; FUNCIONES COMPLEMENTARIAS
+
+; Descripción: revisa si el usuario ya está registrado
+; Tipo de recursión: de cola / debería ser recursión natural, estoy pensando en como cambiarla 01-11-2021
+; Dominio: lista y string.
+; Recorrido: booleano
+(define(enLista listaUsers usuario)
+  (if (not(null? listaUsers))
+      (if(eqv? (cadr(car listaUsers)) usuario)
+         #t
+         (enLista (cdr listaUsers) usuario))
+      #f))
+
+; Descripción: Guarda usuarios en paradigmadocs
+; Tipo de recursión: no utiliza recursión.
+; Dominio: lista y usuario.
+; Recorrido: lista con strings.
+(define(guardarUser listaUsers usuario)
+  (if (not(enLista listaUsers (cadr usuario)))
+      (cons usuario listaUsers)
+      listaUsers))
+
+
+(provide (all-defined-out))
