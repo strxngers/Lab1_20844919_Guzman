@@ -87,10 +87,12 @@
 ; Recorrido:
 ;(define(guardarUser listaUsers usuario)
 
-(provide (all-defined-out))
-
 
 ; EJEMPLOS
 (define ej1(createUser (fecha 25 10 2021) "strxngers" "xdxd"))
 (define ej2(createUser (fecha 25 10 2021) "hola" "xdxd"))
-  
+
+
+
+
+(provide (all-defined-out))

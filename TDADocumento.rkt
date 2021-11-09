@@ -10,8 +10,8 @@
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: fecha tipo entero, nombre del documento tipo string y contenido del documento tipo string.
 ; Recorrido: lista con enteros y strings.
-(define (createDoc fecha nombreDoc contenido)
-  (list fecha nombreDoc contenido))
+(define (createDoc fecha nameDoc content owner)
+  (list fecha nameDoc content owner))
 
 ; PERTENENCIA
 ; Descripción: nos retorna true si corresponde a un documento y en caso contrario retorna false.
@@ -19,15 +19,17 @@
 ; Dominio: documento tipo lista con enteros y strings.
 ; Recorrido: bolleano.
 (define(isDoc doc)
- (if(and (= (length doc)3)
+ (if(and (= (length doc) 4)
            (esFecha (car doc))
            (string? (cadr doc))
            (string? (caddr doc))
+           (string? (cadddr doc))
            )
       #t
       #f))
 
-(define a(createDoc (fecha 03 11 2021) "a1" "este es mi primer documento"))
+; Pequeño ejemplo para comprobar si funciona.
+(define a(createDoc (fecha 03 11 2021) "a1" "este es mi primer documento" "user1"))
 
 ; SELECTORES
 
@@ -44,19 +46,29 @@
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: documento tipo lista con enteros y strings.
 ; Recorrido: nombre del documento tipo string.
-(define(getNombreDoc doc)
+(define(getNameDoc doc)
   (if (isDoc doc)
       (cadr doc)
       null))
 
-; Descripción: nos entrega el contenido del documento,
+; Descripción: nos entrega el contenido del documento.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: documento tipo lista con enteros y strings.
 ; Recorrido: contenido del documento tipo string.
-(define(getContenido doc)
+(define(getContent doc)
   (if (isDoc doc)
       (caddr doc)
       null))
+
+; Descripción: nos entrega el usuario que creó el documento.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento tipo lista con enteros y strings.
+; Recorrido: usuario que creó el documento tipo string.
+(define(getOwner doc)
+  (if (isDoc doc)
+      (cadddr doc)
+      null))
+
 
 ; MODIFICADORES
 
@@ -65,21 +77,29 @@
 ; Dominio: documento tipo lista con enteros y strings.
 ; Recorrido: fecha tipo entero
 (define(setFechaDoc doc fecha)
-  (list fecha (getNombreDoc doc) (getContenido doc)))
+  (list fecha (getNameDoc doc) (getContent doc) (getOwner doc)))
 
 ; Descripción: cambia el nombre del documento.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: documento tipo lista con enteros y strings.
 ; Recorrido: nombre del documento tipo string.
-(define(setNombreDoc doc nombreDoc)
-  (list (getFechaDoc doc) nombreDoc (getContenido doc)))
+(define(setNameDoc doc nameDoc)
+  (list (getFechaDoc doc) nameDoc (getContent doc) (getOwner doc)))
 
 ; Descripción: cambia el contenido del documento.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: documento tipo lista con enteros y strings.
 ; Recorrido: contenido del documento tipo string.
-(define(setContenido doc contenido)
-  (list (getFechaDoc doc)(getNombreDoc doc) contenido))
+(define(setContent doc content)
+  (list (getFechaDoc doc)(getNameDoc doc) content (getOwner doc)))
+
+; Descripción: cambia el usuario que creó el documento.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento tipo lista con enteros y strings.
+; Recorrido: usuario que creó el documento tipo string.
+(define(setOwner doc owner)
+  (list (getFechaDoc doc)(getNameDoc doc) (getContent doc) owner))
+
 
 ; FUNCIONES COMPLEMENTARIAS
 
