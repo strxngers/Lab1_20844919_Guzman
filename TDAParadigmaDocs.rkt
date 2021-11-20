@@ -3,6 +3,8 @@
 ; Para la creación de ParadigmaDocs se requiere usar TDA Fecha
 (require "TDAFecha.rkt")
 (require "TDAUser.rkt")
+(require "TDADocumento.rkt")
+
 
 ; TDAParadigmaDocs
 
@@ -112,6 +114,7 @@
       null))
 
 
+
 ; MODIFICADORES
 
 ; Desripción: Cambia el nombre del paradigmadocs.
@@ -134,7 +137,7 @@
 ; Dominio: paradigmadocs y usuario tipo string.
 ; Recorrido: lista de strings.
 (define(setListaUsers paradigmaDocs usuario)
-  (list (getName paradigmaDocs) (getFecha paradigmaDocs)(getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs) (guardarUser (getListaUsers paradigmaDocs) usuario) (getListaUserActivo paradigmaDocs) (getDocs paradigmaDocs)))
+  (list (getName paradigmaDocs) (getFecha paradigmaDocs)(getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs) (saveUser (getListaUsers paradigmaDocs) usuario) (getListaUserActivo paradigmaDocs) (getDocs paradigmaDocs)))
 
 ; Desripción: cambia la listaUserActivo, va a servir para la función login.
 ; Tipo de recursión: no utiliza recursión.
@@ -148,9 +151,17 @@
 ; Dominio: entero.
 ; Recorrido: entero.
 (define(setDoc paradigmaDocs doc)
-  (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs))(getListaUsers paradigmaDocs) (getListaUserActivo paradigmaDocs) doc)
+  (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
+  (list ) (appendDoc (setID doc (createID (getDocs paradigmaDocs))) (getDocs paradigmaDocs))))
 
 
+; Desripción: agrega un nuevo accesso a la lista.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: paradigmadocs y iD tipo enter.
+; Recorrido: entero.
+(define(setAcc paradigmaDocs iD user access)
+  (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
+  (list ) (editDocAc iD (getDocs paradigmaDocs) user access)))
 
 ; FUNCIONES COMPLEMENTARIAS
 
@@ -169,7 +180,7 @@
 ; Tipo de recursión: no utiliza recursión como tal, hace llamado a una función que utiliza recursión.
 ; Dominio: lista y usuario tipo string.
 ; Recorrido: lista con strings.
-(define(guardarUser listaUsers usuario)
+(define(saveUser listaUsers usuario)
   (if (not(enLista listaUsers (cadr usuario)))
       (cons usuario listaUsers)
       listaUsers))
@@ -186,6 +197,35 @@
          (userPass (cdr listaUsers) user password))
       #f))
 
+; Desripción: agrega un documento a la lista de documentos.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento tipo string y lista. 
+; Recorrido: lista con strings.
+(define (appendDoc doc listaDocs)
+  (reverse (cons doc (reverse listaDocs))))
+
+; Desripción: crea una ID diferente a la inicial (0).
+; Tipo de recursión: recursión de cola.
+; Dominio: lista.
+; Recorrido: lista con enteros.
+(define(createID listaDocs)
+  (if (not (empty? listaDocs))
+      (if (= 1 (length listaDocs))
+          (+ 1 (getID(car listaDocs)))
+          (createID (cdr listaDocs)))
+      0))
+
+; Desripción: agregar los accesos de un documento.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: ID tipo enterto, lista con strings (o en su defecto vacía), usuario tipo string y access tipo string.
+; Recorrido: lista con enteros y strings.
+(define(editDocAc iD listaDocs user access)
+  (map(lambda (doc)
+        (if (equal? (getID doc) iD)
+            (canGiveAc doc user access)
+            doc))listaDocs))
+
+  
 ; Exportación de funciones.
 
 (provide (all-defined-out))
