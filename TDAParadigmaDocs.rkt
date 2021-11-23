@@ -155,13 +155,23 @@
   (list ) (appendDoc (setID doc (createID (getDocs paradigmaDocs))) (getDocs paradigmaDocs))))
 
 
-; Desripción: agrega un nuevo accesso a la lista.
+; Desripción: agrega un nuevo accesso a la lista de accesos.
 ; Tipo de recursión: no utiliza recursión.
 ; Dominio: paradigmadocs y iD tipo enter.
 ; Recorrido: entero.
 (define(setAcc paradigmaDocs iD user access)
   (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
   (list ) (editDocAc iD (getDocs paradigmaDocs) user access)))
+
+
+; Desripción: entrega una versión actualizada del paradigmadocs con el nuevo contenido añadido al documento.
+; Tipo de recursión: una de las funciones utilizadas utiliza recursión de cola.
+; Dominio: paradigmadocs y iD tipo enter.
+; Recorrido: entero.
+(define(addContent paradigmaDocs iD user newContent)
+  (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
+  (list ) (editDocCont (getDocs paradigmaDocs) iD user newContent)))
+
 
 ; FUNCIONES COMPLEMENTARIAS
 
@@ -225,7 +235,18 @@
             (canGiveAc doc user access)
             doc))listaDocs))
 
-  
+
+; Desripción: función que revisa que las iD de los documentos en lista corresponda con la iD de los documentos existentes, de ser así, agrega el contenido.
+; Tipo de recursión: recursión de cola.
+; Dominio: ID tipo enterto, lista con strings (o en su defecto vacía), usuario tipo string y access tipo string.
+; Recorrido: lista con enteros y strings.
+(define(editDocCont listaDocs iD user content)
+  (map(lambda (doc)
+        (if (equal? (getID doc) iD)
+            (editContent doc user content)
+            doc))listaDocs))
+
+
 ; Exportación de funciones.
 
 (provide (all-defined-out))
