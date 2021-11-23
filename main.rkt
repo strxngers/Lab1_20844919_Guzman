@@ -11,7 +11,7 @@
 
 ; FUNCIÓN REGISTER
 ; con el TDAUser y TDAParadigmaDocs podemos registrar a un usuario
-; Descripción: función que registra un usuario.
+; Descripción: Función que registra un usuario.
 ; Tipo de recursión: una de las funciones a las que se le llama en la función tiene recursión natural.
 ; Dominio: strings y enteros
 ; Recorrido: lista con strings y enteros
@@ -20,7 +20,7 @@
 
 
 ; FUNCIÓN LOGIN
-; Descripción: función que loguea a un usuario.
+; Descripción: Función que loguea a un usuario.
 ; Tipo de Recursión: una de las funciones utilizadas en la función utiliza recursión natural.
 ; Dominio:
 ; Recorrido:
@@ -30,18 +30,35 @@
      (operation paradigmadocs)))
 
 
+; por mientras jiji -----------------------------------------------------------------------------------------------------------------------
+(define pseudologin (lambda (paradigmadocs username password) (setListaUsersActivo paradigmadocs username)))
+; -----------------------------------------------------------------------------------------------------------------------------------------
+
 
 ; FUNCIÓN CREATE
-; Descripción:
-; Tipo de Recursión: 
-; Dominio: paradigmadocs X date X String (nombreDoc) X String  (contenido)
-; Recorrido:
+; Descripción: Función que permite a un usuario con sesión iniciada en la plataforma crear un nuevo documento. 
+; Tipo de Recursión: no utiliza recursión.
+; Dominio: paradigmadocs tipo lista con strings y enteros.
+; Recorrido: paradigmadocs tipo lista con strings y enteros.
 (define create (lambda (paradigmadocs)
                  (lambda (fecha nameDoc content) paradigmadocs
                    (if (empty? (getListaUserActivo paradigmadocs))
                        paradigmadocs
-                       (setDoc paradigmadocs (setOwner (createDoc fecha nameDoc content) (car(getListaUserActivo paradigmadocs)))) 
-                 )))) 
+                       (setDoc paradigmadocs (setOwner (createDoc fecha nameDoc ((getEncryptFunction paradigmadocs) content) ) (car(getListaUserActivo paradigmadocs)))) 
+                       ))))    
+
+
+; FUNCIÓN SHARE
+; Descripción: Función que permite compartir un documento con otros usuarios especificando el tipo de acceso a éste
+;              (lectura, escritura, comentarios).
+; Tipo de Recursión: no utiliza recursión.
+; Dominio: paradigmadocs, entero y string.
+; Recorrido: paradigmadocs tipo lista con strings y enteros.
+(define share (lambda (paradigmadocs)
+                (lambda (idDoc access)
+                  (if (empty? (getListaUserActivo paradigmadocs))
+                      paradigmadocs
+                      (setAcc paradigmadocs idDoc (car(getListaUserActivo paradigmadocs)) access)))))
 
 
 
@@ -80,4 +97,12 @@
 (define gDocs4 ((login gDocs3 "user2" "pass2" create) (fecha 30 08 2021) "doc2" "contenido doc2"))
 (define gDocs5 ((login gDocs4 "user3" "pass3" create) (fecha 30 08 2021) "doc3" "contenido doc3"))
 (define gDocs6 ((login gDocs5 "user1" "pass1" share) 1 (access "user2" #\r)))
+
+
+(define gDocs7 ((login gDocs6 "user2" "pass2" share) 0 (access "user1" #\r)))
+(define gDocs8 ((login gDocs7 "user3" "pass3" share) 0 (access "user1" #\c)))
+(define gDocs9 ((login gDocs8 "user1" "pass1" add) 0 (fecha 30 11 2021) "mas contenido en doc0"))
+(define gDocs10 ((login gDocs9 "user3" "pass3" add) 0 (fecha 30 11 2021) "mas contenido en doc3"))
+;(define gDocs11 ((login gDocs10 "user1" "pass1" restoreVersion) 0 0))
+;(define gDocs12 (login gDocs11 "user2" "pass2" revokeAllAccesses))
 
