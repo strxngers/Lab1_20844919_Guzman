@@ -30,11 +30,6 @@
      (operation paradigmadocs)))
 
 
-; por mientras jiji -----------------------------------------------------------------------------------------------------------------------
-(define pseudologin (lambda (paradigmadocs username password) (setListaUsersActivo paradigmadocs username)))
-; -----------------------------------------------------------------------------------------------------------------------------------------
-
-
 ; FUNCIÓN CREATE
 ; Descripción: Función que permite a un usuario con sesión iniciada en la plataforma crear un nuevo documento. 
 ; Tipo de Recursión: no utiliza recursión.
@@ -59,6 +54,18 @@
                   (if (empty? (getListaUserActivo paradigmadocs))
                       paradigmadocs
                       (setAcc paradigmadocs idDoc (car(getListaUserActivo paradigmadocs)) access)))))
+
+
+; FUNCIÓN ADD
+; Descripción: Función que permite añadir texto al final de la versión actual/activa del documento
+; Tipo de Recursión: no utiliza recursión como tal, funciones que sirven en su implementación utilizan recursión de cola.
+; Dominio: paradigmadocs tipo lista con strings y enteros.
+; Recorrido: paradigmadocs tipo lista con strings y enteros.
+(define add (lambda (paradigmadocs)
+              (lambda (idDoc fecha newContent)
+                  (if(empty? (getListaUserActivo paradigmadocs))
+                     paradigmadocs
+                     (addContent paradigmadocs idDoc (car(getListaUserActivo paradigmadocs)) ((getEncryptFunction paradigmadocs) newContent))))))
 
 
 
