@@ -79,7 +79,18 @@
                 (if(empty? (getListaUserActivo paradigmadocs))     
                    paradigmadocs
                    (rV paradigmadocs idDoc idVersion (car(getListaUserActivo paradigmadocs)))))))
-                 
+
+
+; FUNCIÓN REVOKEALLACCESSES
+; Descripción: Función que permite al usuario revocar todos los accesos a sus documentos.
+; Tipo de Recursión: no utiliza recursión como tal, funciones que sirven en su implementación utilizan recursión de cola.
+; Dominio: paradigmadocs tipo lista con strings y enteros.
+; Recorrido: paradigmadocs (tipo lista con strings y enteros) actualizado con los accesos que se quitaron.
+(define revokeAllAccesses (lambda (paradigmadocs)
+                           (if(empty? (getListaUserActivo paradigmadocs))     
+                              paradigmadocs
+                              (revok paradigmadocs (car (getListaUserActivo paradigmadocs))))))
+
 
 
 ; ----------------------------------------------------------- EJEMPLOS FUNCIÓN REGISTER ----------------------------------------------------------------
@@ -131,5 +142,10 @@
 (define gDocsRV1 ((login gDocs5 "user1" "pass1" restoreVersion) 0 0))
 (define gDocsRV2 ((login gDocs5 "user1" "pass1" restoreVersion) 1 0))
 
+; ------------------------------------------------------------ EJEMPLOS FUNCIÓN REVOKEALLACCESS ------------------------------------------------------------------
+
+(define gDocs12 (login gDocs11 "user2" "pass2" revokeAllAccesses))
+(define gDocsRAA1 (login gDocs11 "user1" "pass3" revokeAllAccesses))
+(define gDocsRAA2 (login gDocs11 "user3" "pass3" revokeAllAccesses)) 
 
 
