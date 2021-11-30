@@ -7,6 +7,7 @@
 (require "TDAUser.rkt")
 (require "TDADocumento.rkt")
 (require "TDAAccess.rkt")
+(require "TDAVersiones.rkt")
 
 
 ; FUNCIÓN REGISTER
@@ -60,13 +61,25 @@
 ; Descripción: Función que permite añadir texto al final de la versión actual/activa del documento
 ; Tipo de Recursión: no utiliza recursión como tal, funciones que sirven en su implementación utilizan recursión de cola.
 ; Dominio: paradigmadocs tipo lista con strings y enteros.
-; Recorrido: paradigmadocs tipo lista con strings y enteros.
+; Recorrido: paradigmadocs tipo lista con strings y enteros, con el contenido del documento actualizado tipo string.
 (define add (lambda (paradigmadocs)
               (lambda (idDoc fecha newContent)
                   (if(empty? (getListaUserActivo paradigmadocs))
                      paradigmadocs
                      (addContent paradigmadocs idDoc (car(getListaUserActivo paradigmadocs)) ((getEncryptFunction paradigmadocs) newContent))))))
 
+
+; FUNCIÓN RESTOREVERSION
+; Descripción: Función que permite restaurar una versión anterior de un documento.
+; Tipo de Recursión: no utiliza recursión como tal, funciones que sirven en su implementación utilizan recursión de cola.
+; Dominio: paradigmadocs tipo lista con strings y enteros, iD tipo entero.
+; Recorrido:
+(define restoreVersion (lambda (paradigmadocs)
+             (lambda (idDoc idVersion)
+                (if(empty? (getListaUserActivo paradigmadocs))     
+                   paradigmadocs
+                   (rV paradigmadocs idDoc idVersion (car(getListaUserActivo paradigmadocs)))))))
+                 
 
 
 ; ----------------------------------------------------------- EJEMPLOS FUNCIÓN REGISTER ----------------------------------------------------------------
@@ -77,8 +90,12 @@
 (define gDocsR1(register (register (register emptyGDocs (fecha 25 10 2021) "user1" "pass1")(fecha 25 10 2021) "user2" "pass2") (fecha 25 10 2021) "user3" "pass3"))
 ; Ejemplo en el que hay dos usuarios iguales, entonces solo registra los que son distintos.
 (define gDocsR2(register (register (register emptyGDocs (fecha 25 10 2021) "user1" "pass1")(fecha 25 10 2021) "user1" "pass2") (fecha 25 10 2021) "user3" "pass3"))
+(define gDocs1 (register (register (register emptyGDocs
+                               (fecha 25 10 2021)"user1" "pass1")
+                     (fecha 25 10 2021) "user2" "pass2")
+           (fecha 25 10 2021) "user3" "pass3"))
 
-; ----------------------------------------------------------- EJEMPLOS FUNCIÓN LOGIN ------------------------------------------------------------------
+; ----------------------------------------------------------- EJEMPLOS FUNCIÓN LOGIN ---------------------------------------------------------------------------
 
 (define ejemploL1((login ejemploR1 "userR" "passR" create)(fecha 22 02 2021) "xd" "ñe"))
 (define ejemploL2((login gDocsR1 "user1" "pass1" create) (fecha 30 10 2020) "doc1" "este es mi primer documento"))
@@ -87,29 +104,32 @@
 ; Ejemplo en el que el usuario no está registrado, entonces no lo loguea ni funciona el create.
 (define gDocsL3 ((login gDocsR2 "user2" "pass2" create) (fecha 30 08 2021) "doc2" "contenido doc2"))
 
-; ----------------------------------------------------------- EJEMPLOS FUNCIÓN CREATE ------------------------------------------------------------------
+; ----------------------------------------------------------- EJEMPLOS FUNCIÓN CREATE --------------------------------------------------------------------------
+
 (define yay((create ejemploR1) (fecha 19 11 2021) "felicidad" "alegría")) ; primer ejemplo de cuando me finalmente me funcionó create 
-
-
-
-
-; ------------------------------------------------------------ EJEMPLOS FUNCIÓN SHARE ------------------------------------------------------------------
-;Funciones de prueba
-(define gDocs1 (register (register (register emptyGDocs
-                               (fecha 25 10 2021)"user1" "pass1")
-                     (fecha 25 10 2021) "user2" "pass2")
-           (fecha 25 10 2021) "user3" "pass3"))
 (define gDocs2 ((login gDocs1 "user1" "pass1" create) (fecha 30 08 2021) "doc0" "contenido doc0"))
 (define gDocs3 ((login gDocs2 "user1" "pass1" create) (fecha 30 08 2021) "doc1" "contenido doc1"))
 (define gDocs4 ((login gDocs3 "user2" "pass2" create) (fecha 30 08 2021) "doc2" "contenido doc2"))
 (define gDocs5 ((login gDocs4 "user3" "pass3" create) (fecha 30 08 2021) "doc3" "contenido doc3"))
+
+; ------------------------------------------------------------ EJEMPLOS FUNCIÓN SHARE ---------------------------------------------------------------------------
+
 (define gDocs6 ((login gDocs5 "user1" "pass1" share) 1 (access "user2" #\r)))
-
-
 (define gDocs7 ((login gDocs6 "user2" "pass2" share) 0 (access "user1" #\r)))
 (define gDocs8 ((login gDocs7 "user3" "pass3" share) 0 (access "user1" #\c)))
+;(define gDocsSE1 ((login gDocs7 "user3" "pass3" share) 0 (access "user1" #\c #\r)))    ; mi función no funciona al ingresar más de dos tipos de access
+
+; ------------------------------------------------------------ EJEMPLOS FUNCIÓN ADD -----------------------------------------------------------------------------
+
 (define gDocs9 ((login gDocs8 "user1" "pass1" add) 0 (fecha 30 11 2021) "mas contenido en doc0"))
 (define gDocs10 ((login gDocs9 "user3" "pass3" add) 0 (fecha 30 11 2021) "mas contenido en doc3"))
-;(define gDocs11 ((login gDocs10 "user1" "pass1" restoreVersion) 0 0))
-;(define gDocs12 (login gDocs11 "user2" "pass2" revokeAllAccesses))
+(define gDocsA1 ((login gDocs9 "user3" "pass3" add) 0 (fecha 30 11 2021) "contenido erroneo"))
+
+; ------------------------------------------------------------ EJEMPLOS FUNCIÓN RESTOREVERSION ------------------------------------------------------------------
+
+(define gDocs11 ((login gDocs10 "user1" "pass1" restoreVersion) 0 0))
+(define gDocsRV1 ((login gDocs5 "user1" "pass1" restoreVersion) 0 0))
+(define gDocsRV2 ((login gDocs5 "user1" "pass1" restoreVersion) 1 0))
+
+
 
