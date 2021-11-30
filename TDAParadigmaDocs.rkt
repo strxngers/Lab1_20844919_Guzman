@@ -166,11 +166,31 @@
 
 ; Desripción: entrega una versión actualizada del paradigmadocs con el nuevo contenido añadido al documento.
 ; Tipo de recursión: una de las funciones utilizadas utiliza recursión de cola.
-; Dominio: paradigmadocs y iD tipo enter.
+; Dominio: paradigmadocs y iD tipo entero.
 ; Recorrido: entero.
 (define(addContent paradigmaDocs iD user newContent)
   (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
   (list ) (editDocCont (getDocs paradigmaDocs) iD user newContent)))
+
+
+; Desripción: función que entrega una versión actualizada de paradigmadocs con el contenido de la versión restaurada que se desea.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: paradigmadocs tipo lista con enteros, strings y listas, iDs tipo entero y usuario tipo string.
+; Recorrido: paradigmadocs tipo lista con enteros, strings y listas.
+(define(rV paradigmaDocs iD idVersion user)
+  (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
+  (list ) (editDocVer (getDocs paradigmaDocs) iD user idVersion)))
+
+
+; Desripción: función que entrega una versión actualizada de paradigmadocs sin los accesos que se habían entregado anteriormente.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: paradigmadocs tipo lista con enteros, strings y listas, usuario tipo string.
+; Recorrido: paradigmadocs tipo lista con enteros, strings y listas.
+(define(revok paradigmaDocs user)
+  (list (getName paradigmaDocs) (getFecha paradigmaDocs) (getEncryptFunction paradigmaDocs)(getDecryptFunction paradigmaDocs)(getListaUsers paradigmaDocs)
+  (list ) (resetAccesses (getDocs paradigmaDocs) user)))
+
+
 
 
 ; FUNCIONES COMPLEMENTARIAS
@@ -245,6 +265,33 @@
         (if (equal? (getID doc) iD)
             (editContent doc user content)
             doc))listaDocs))
+
+
+; Desripción: función que revisa que las iD de los documentos en lista corresponda con la iD de los documentos existentes, de ser así, agrega el contenido.
+; Tipo de recursión: recursión de cola.
+; Dominio: ID tipo enterto, lista con strings (o en su defecto vacía), usuario tipo string y access tipo string.
+; Recorrido: lista con enteros y strings.
+(define(editDocVer listaDocs iD user idVersion)
+  (map(lambda (doc)
+        (if (equal? (getID doc) iD)
+            (restore doc idVersion user)
+            doc))listaDocs))
+
+
+; Desripción: función que entrega una versión del documento en la que se quitaron los accesos a el/los documentos si el usuario es el dueño del documento.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento tipo lista con enteros y strings, lista de documentos y usuario tipo string.
+; Recorrido: documento actualizado sin los accesos en documentos.
+(define(resetAccesses listaDocs user)
+  (map(lambda (doc)
+        (if (isOwner? doc user)
+            (list (getFechaDoc doc)(getNameDoc doc) (getContent doc) (getOwner doc) (getID doc) (list ) (getVersions doc))
+            doc))listaDocs))
+
+
+
+
+
 
 
 ; Exportación de funciones.

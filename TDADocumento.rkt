@@ -208,4 +208,33 @@
       doc))
 
 
+; Descripción: función que nos dice si el usuario entregado es le dueño del cocumento
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento y usuario tipo string.
+; Recorrido: booleano.
+(define (isOwner? doc user)
+  (equal? (car(getOwner doc)) user))
+
+
+; Descripción: función que busca las versiones del documento según la ID y entrega el contenido de esta versión.
+; Tipo de recursión: utiliza recursión natural.
+; Dominio: documento tipo lista con enteros y strings, id.
+; Recorrido: contenido tipo string.
+(define(searchVersionContent listaVersions idVersion user owner)
+  (if (equal? user owner)
+      (if (equal? idVersion (getIdVersion (car listaVersions)))         
+          (getContentVersion (car listaVersions))                       
+          (searchVersionContent (cdr listaVersions) idVersion user owner))
+      (getContentVersion (car listaVersions))))   
+
+
+; Descripción: función que actualiza el documento con el contenido al que se quiere volver.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento tipo lista con enteros y strings, idVersion tipo entero y usuario tipo string.
+; Recorrido: documento actualizado en el contenido, tipo lista con enteros y strings. 
+(define (restore doc idVersion user)
+  (list (getFechaDoc doc)(getNameDoc doc) (searchVersionContent (getVersions doc) idVersion user (car(getOwner doc))) (getOwner doc) (getID doc) (getAc doc) (getVersions doc)))
+
+
+
 (provide (all-defined-out))
