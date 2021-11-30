@@ -2,12 +2,11 @@
 
 ; main
 
-(require "TDAFecha.rkt")
-(require "TDAParadigmaDocs.rkt")
-(require "TDAUser.rkt")
-(require "TDADocumento.rkt")
-(require "TDAAccess.rkt")
-(require "TDAVersiones.rkt")
+(require "TDAFecha_20844919_GuzmanMadriaga.rkt")
+(require "TDAParadigmaDocs_20844919_GuzmanMadriaga.rkt")
+(require "TDAUser_20844919_GuzmanMadriaga.rkt")
+(require "TDADocumento_20844919_GuzmanMadriaga.rkt")
+(require "TDAAccess_20844919_GuzmanMadriaga.rkt")
 
 
 ; FUNCIÓN REGISTER

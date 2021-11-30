@@ -1,5 +1,5 @@
 #lang racket
-(require "TDAFecha.rkt")
+(require "TDAFecha_20844919_GuzmanMadriaga.rkt")
 
 ; Implementación del TDAUsuario
 
@@ -78,14 +78,6 @@
 (define(setPassword user password)
   (list (getFechaR user) (getUser user) password ))
 
-
-; FUNCIONES EXTRA
-
-; Desripción: 
-; Tipo de recursión: no tiene.
-; Dominio: 
-; Recorrido:
-;(define(guardarUser listaUsers usuario)
 
 
 ; EJEMPLOS

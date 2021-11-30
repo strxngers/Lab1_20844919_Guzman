@@ -1,9 +1,9 @@
 #lang racket
 
 ; Para este TDA utilizaremos el TDA Fecha y TDA Access
-(require "TDAFecha.rkt")
-(require "TDAAccess.rkt")
-(require "TDAVersiones.rkt")
+(require "TDAFecha_20844919_GuzmanMadriaga.rkt")
+(require "TDAAccess_20844919_GuzmanMadriaga.rkt")
+(require "TDAVersiones_20844919_GuzmanMadriaga.rkt")
 
 ; TDA Documento
 

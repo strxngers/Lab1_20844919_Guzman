@@ -1,9 +1,9 @@
 #lang racket
 
 ; Para la creación de ParadigmaDocs se requiere usar TDA Fecha
-(require "TDAFecha.rkt")
-(require "TDAUser.rkt")
-(require "TDADocumento.rkt")
+(require "TDAFecha_20844919_GuzmanMadriaga.rkt")
+(require "TDAUser_20844919_GuzmanMadriaga.rkt")
+(require "TDADocumento_20844919_GuzmanMadriaga.rkt")
 
 
 ; TDAParadigmaDocs
