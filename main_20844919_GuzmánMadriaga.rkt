@@ -91,6 +91,16 @@
                               (revok paradigmadocs (car (getListaUserActivo paradigmadocs))))))
 
 
+; FUNCIÓN PARADIGMADOCS -> STRING
+; Descripción: Función que recibe una plataforma del tipo paradigmadocs y entrega una representación del mismo como un
+;              string posible de visualizar de forma comprensible al usuario (incluyendo el uso de la función para desencriptar el contenido).
+; Tipo de Recursión: no utiliza recursión
+; Dominio: paradigmadocs
+; Recorrido: información de paradigmadocs convertida a string. 
+(define paradigmadocs->string (lambda (paradigmadocs)
+                                (aString paradigmadocs)))
+
+
 
 ; ----------------------------------------------------------- EJEMPLOS FUNCIÓN REGISTER ----------------------------------------------------------------
 
@@ -147,4 +157,9 @@
 (define gDocsRAA1 (login gDocs11 "user1" "pass3" revokeAllAccesses))
 (define gDocsRAA2 (login gDocs11 "user3" "pass3" revokeAllAccesses)) 
 
+; ---------------------------------------------------------- EJEMPLOS FUNCIÓN PARADIGMADOCS->STRING ------------------------------------------------------------------
+
+(define ejemploAString1(paradigmadocs->string gDocs1))
+(define ejemploAString2(paradigmadocs->string yay))
+(define ejemploAString3(paradigmadocs->string gDocsA1))
 
