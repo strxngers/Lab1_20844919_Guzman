@@ -236,5 +236,19 @@
   (list (getFechaDoc doc)(getNameDoc doc) (searchVersionContent (getVersions doc) idVersion user (car(getOwner doc))) (getOwner doc) (getID doc) (getAc doc) (getVersions doc)))
 
 
+; Desripción: función que convierte documentos a strings.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: documento tipo lista con strings, listas y enteros.
+; Recorrido: información de los documentos en strings.
+(define (doc->string document decrypt)
+  (map (lambda (doc)
+         (if (isDoc doc)
+             (string-append "Creado en: " (fecha->string(getFechaDoc doc)) "\n" "Nombre documento: " (getNameDoc doc) "\n" "Contenido: " (decrypt(getContent doc)) "\n"
+                             "Dueño: " (string-append* (getOwner doc)) "\n""ID documento: " (number->string(getID doc)) "\n" "Accesos" "\n" (string-append*(access->string(getAc doc))) "\n" "Versión" "\n"
+                             (string-append*(versions->string (getVersions doc) decrypt)))
+             ""
+             ))document))
+
+(define i(createDoc (fecha 30 11 2021) "xd" "jeje"))
 
 (provide (all-defined-out))

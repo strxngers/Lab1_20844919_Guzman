@@ -8,6 +8,16 @@
 (define(access user char)
   (list user char))
 
+; PERTENENCIA
+(define(isAccess access)
+   (if(and (= (length access) 2)
+           (string? (car access))
+           (char? (cadr access))
+           )
+      #t
+      #f))
+
+
 ; SELECTORES
 
 ; Descripción: entrega el usuario.
@@ -32,5 +42,21 @@
 ; Recorrido: lista con strings.
 (define(setChar access char)
   (list (getUserAccess access) char))
+
+
+; Desripción: función que convierte accesos a strings.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: lista de accesos.
+; Recorrido: información de accesos convertida a string.
+(define (access->string accesses)
+  (if (empty? accesses)
+      (list "")
+      (map(lambda(access)
+            (if (isAccess access)
+                (string-append "User: " (getUserAccess access) "\n" "Accesos: " (string(getChar access)) "\n")
+                ""
+                ))accesses)))
+
+(define e(access->string(list (access "Benja" #\r) (access "Paolo" #\w))))
 
 (provide (all-defined-out))

@@ -289,8 +289,27 @@
             doc))listaDocs))
 
 
+; Desripción: función que convierte los usuarios de una lista a strings.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: lista de usuarios.
+; Recorrido: lista de usuarios en strings.
+(define (userString listaUsers)
+  (map (lambda (user)
+         (if (not(empty? user))
+             (string-append "Fecha: " (fecha->string(getFechaR user)) "\n" "Username: " (getUser user) "\n" "Password: " (getPassword user) "\n")
+             ""))listaUsers))
 
 
+; Desripción: función que convierte un paradigmadocs a strings.
+; Tipo de recursión: no utiliza recursión.
+; Dominio: paradigmadocs.
+; Recorrido: información de paradigmadocs convertida a string.
+(define (aString paradigmaDocs)
+  (if (isParadigmaDocs? paradigmaDocs)
+      (string-append "Paradigmadocs"  "\n" "Nombre paradigmadocs: " (getName paradigmaDocs) "\n" "Fecha: " (fecha->string(getFecha paradigmaDocs)) "\n"
+                    "Lista de usuarios: " "\n" (string-append* (userString (getListaUsers paradigmaDocs)))
+                    "\n" "Documento" "\n" (string-append*(doc->string(getDocs paradigmaDocs) (getDecryptFunction paradigmaDocs))))
+      ""))
 
 
 

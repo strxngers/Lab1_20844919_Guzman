@@ -34,7 +34,7 @@
 ; Recorrido: entero.
 (define(getFechaR user)
   (if (isUser? user)
-      (cadr user)
+      (car user)
       null))
 
 ; Descripción: Retorna el nombre de usuario.
@@ -43,7 +43,7 @@
 ; Recorrido: string.
 (define(getUser user)
   (if (isUser? user)
-      (caddr user)
+      (cadr user)
       null))
 
 ; Descripción: Retorna la contraseña.
@@ -77,13 +77,6 @@
 ; Recorrido: string.
 (define(setPassword user password)
   (list (getFechaR user) (getUser user) password ))
-
-
-
-; EJEMPLOS
-(define ej1(createUser (fecha 25 10 2021) "strxngers" "xdxd"))
-(define ej2(createUser (fecha 25 10 2021) "hola" "xdxd"))
-
 
 
 
